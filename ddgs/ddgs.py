@@ -94,9 +94,8 @@ class DDGS:
         shuffle(engine_keys)
         if "auto" in backend_list or "all" in backend_list:
             keys = engine_keys
-            if category == "text":
-                # ensure Wikipedia is always included and in the first position
-                keys = ["wikipedia"] + [key for key in keys if key != "wikipedia"]
+            # Engines will be sorted by priority (higher values first)
+            # No need to hardcode Wikipedia - priority system handles it
         else:
             keys = backend_list
 
@@ -192,6 +191,10 @@ class DDGS:
                     if f in done:
                         try:
                             if r := f.result():
+                                # Add engine metadata to each result for priority ranking
+                                for result in r:
+                                    result.engine_name = f_engine.name
+                                    result.engine_priority = f_engine.priority
                                 results_aggregator.extend(r)
                                 seen_providers.add(f_engine.provider)
                         except Exception as ex:  # noqa: BLE001

@@ -12,7 +12,8 @@ from ddgs.results import TextResult
 class Google(BaseSearchEngine[TextResult]):
     """Google search engine."""
 
-    disabled = True  # !!!
+    disabled = False  # Enabled for priority search
+    priority = 2  # Second priority (after Naver's 3)
 
     name = "google"
     category = "text"
